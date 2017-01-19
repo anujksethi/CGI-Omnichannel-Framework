@@ -22,18 +22,18 @@ var VideoChatModal = React.createClass({
                        </tr>
                        <tr>
                            <td>
-                           <video id="my-video" autoplay></video>
+                           <video id="my-video" ref="callerVideo" autoplay></video>
                            </td>
                            <td>
-                             <video id="their-video" autoplay class="their-video"></video>
+                             <video id="their-video" ref="receiverVideo" autoplay class="their-video"></video>
                            </td>
                            <td>
                                     <div id="step2">
 	                                    <p>Your id: <span id="my-id">...</span></p>
 	                                    <p>Share this id with others so they can call you.</p>
-                                        <audio id="chatAudio">
+                                        <audio id="chatAudio" ref="chatAudio">
                                              <source src="images/ringtone.mp3" type="audio/mpeg"></source>
-                                            </audio>
+                                        </audio>
 	                                    <p>
 	                                    <span id="subhead">Make a call</span><br />
 		                                    <input type="text" placeholder="Call user id..." id="callto-id" />
@@ -107,7 +107,7 @@ var VideoChatModal = React.createClass({
 
                              },
                                  componentDidMount: function () {
-                                 var video = document.getElementById('my-video');
+                                 //  var video = document.getElementById('my-video');
                                  var peer = new Peer({
                                      key: '2p9ffp7ol6p3nmi',
                                      debug: 3,
@@ -123,29 +123,29 @@ var VideoChatModal = React.createClass({
                                  var perfHub = $.connection.perfHub;
 
                                  $.connection.hub.logging = true;
-                                
+
                                  var self = this;
                                  perfHub.client.newMessage = function (message) {
                                      self.setState({ callerKey: message });
-                                   
 
-                                    
-                                         //your code to be executed after 1 second
-                                         console.log(message + " push message received ");
-                                         if (self.state.diallerKey != self.state.callerKey) {
 
-                                             $('#chatAudio')[0].play();
-                                             var delay=5000; //1 second
-                                             setTimeout(function() {
 
-                                                 var call = peer.call(message, window.localStream);
-                                                 step3(call);
-                                                 $('#chatAudio')[0].pause();
-                                             }   , delay);
-                                         }
-                                       
-                                 
-                                    
+                                     //your code to be executed after 1 second
+                                     console.log(message + " push message received ");
+                                     if (self.state.diallerKey != self.state.callerKey) {
+
+                                         self.refs.chatAudio.play();
+                                         var delay=5000; //1 second
+                                         setTimeout(function() {
+
+                                             var call = peer.call(message, window.localStream);
+                                             step3(call);
+                                             self.refs.chatAudio.pause();
+                                         }   , delay);
+                                     }
+
+
+
                                  }
                                  $.connection.hub.start().done(function () {
                                      console.log("Connected, transport = " + $.connection.hub.transport.name);
@@ -208,8 +208,8 @@ var VideoChatModal = React.createClass({
                                  function step1() {
                                      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                                          navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(function (stream) {
-                                             video.src = window.URL.createObjectURL(stream);
-                                             video.play();
+                                             self.refs.callerVideo.src = window.URL.createObjectURL(stream);
+                                             self.refs.callerVideo.play();
                                              window.localStream = stream;
                                              step2();
                                          });
@@ -242,8 +242,11 @@ var VideoChatModal = React.createClass({
 
                                      // Wait for stream on the call, then setup peer video
                                      call.on('stream', function (stream) {
-                                         $('#their-video').prop('src', URL.createObjectURL(stream));
-                                      //   $('#their-video').play();
+
+                                         self.refs.receiverVideo.src = URL.createObjectURL(stream);
+
+                                         //   $('#their-video').prop('src', URL.createObjectURL(stream));
+                                         //   $('#their-video').play();
                                      });
                                      window.existingCall = call;
                                      call.on('close', step2);
@@ -253,10 +256,10 @@ var VideoChatModal = React.createClass({
                              }//end of component did mount
 
                              });
-//ReactDOM.render(
-//   <VideoChatModal />,
-//    document.getElementById('chatDiv')
-//);
+        //ReactDOM.render(
+        //   <VideoChatModal />,
+        //    document.getElementById('chatDiv')
+        //);
         var VideoChatModalId = 'sample-modal-container';
         var VideoChatComponent = React.createClass({
             handleShowVideoChatModal: function () {
