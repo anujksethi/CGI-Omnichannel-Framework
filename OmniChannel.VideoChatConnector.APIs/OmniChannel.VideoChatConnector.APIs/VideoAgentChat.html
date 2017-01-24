@@ -5,15 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="PageContext" content="Order"/>
+    <script src="js/reactLib/react.js"></script>
+    <script src="js/reactLib/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
-    <!--<script src="Scripts/jquery-1.6.4.js"></script>-->
 
+ 
+    <!--<script src="Scripts/jquery-1.6.4.js"></script>-->
     <script src="Scripts/jquery.signalR-2.2.1.js"></script>
     <script src="http://localhost/OmniChannel.VideoChatConnector.APIs/Signalr/hubs"></script>
-    <script src="js/VideoChat.js"></script>
+    <script src="js/VideoAgentChat.js"></script>
+    <script src="js/reactComponent/CustomerAgent.jsx" type="text/babel"></script>
+
     <style>
         video {
   height: 425px;
@@ -21,9 +28,24 @@
   vertical-align: top;
   width: calc(100% - 12px);
 }
+      table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
     </style>
     <link href="css/style.css" rel="stylesheet" />
-    <title>Video Chat</title>
+    <title>Video Agent Chat</title>
     <meta charset="utf-8" />
 </head>
 <body>
@@ -31,10 +53,11 @@
     <div>
         <img src="images/vc2.png" class="btn " id="btnShowModal" href="javascript:;" data-toggle="modal" data-target="#myModal"/>
     </div>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
         Launch demo modal
-    </button>
-    <input type="hidden" id="hidUserName"/>
+    </button>-->
+    <div id="customerDiv"></div>
+    <input type="hidden" id="hidCustomerDiallerKey"/>
     <!-- Modal -->
     <div class="modal fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">

@@ -31,7 +31,6 @@ var videoChatHub = $.connection.videoChatHub;
 $.connection.hub.logging = true;
 var callerKey, diallerKey;
 var self = this;
-var pageContext = $("meta[name='PageContext']").attr("content");
 var hubConnectionId
 videoChatHub.client.newMessage = function (message) {
     // self.setState({ callerKey: message });
@@ -40,17 +39,17 @@ videoChatHub.client.newMessage = function (message) {
 
     //your code to be executed after 1 second
     console.log(message + " push message received ");
-    if (diallerKey != callerKey) {
+    //if (diallerKey != callerKey) {
 
-        $('#chatAudio')[0].play();
-        var delay = 5000; //1 second
-        setTimeout(function () {
+    //    $('#chatAudio')[0].play();
+    //    var delay = 5000; //1 second
+    //    setTimeout(function () {
 
-            var call = peer.call(message, window.localStream);
-            step3(call);
-            $('#chatAudio')[0].pause();
-        }, delay);
-    }
+    //        var call = peer.call(message, window.localStream);
+    //        step3(call);
+    //        $('#chatAudio')[0].pause();
+    //    }, delay);
+    //}
 
 
 
@@ -69,18 +68,26 @@ videoChatHub.client.newMessage = function (message) {
 
 
 if (videoChatHub) {
-    console.log("SignalR hub initialized.");
+    console.log("SignalR jquery hub initialized.");
 }
 
 function sendMessage(localPeerId) {
     if (videoChatHub.server) {
-
-        videoChatHub.server.connectCustomer($('#hidUserName').val(), localPeerId, pageContext);
-
-        videoChatHub.server.send(localPeerId);
-        console.log(localPeerId + " diallerkey shared");
+        videoChatHub.server.connectAgent(localPeerId);
+        console.log(localPeerId + " jquery connectagent called");
     }
 }
+
+
+//function sendMessage(localPeerId) {
+//    if (videoChatHub.server) {
+
+//        videoChatHub.server.connectAgent('John', localPeerId, 'Order');
+
+//        videoChatHub.server.send(localPeerId);
+//        console.log(localPeerId + " diallerkey shared");
+//    }
+//}
 
 
 
@@ -100,21 +107,48 @@ peer.on('call', function (call) {
 
 // Click handlers setup
 $(function () {
+    //$("input[id=hidCustomerDiallerKey]").change(function () {
+    //    //fire your ajax call  
+    //    alert('value changed');
+    //});
+    $("input[id=hidCustomerDiallerKey]").on('change', function() {
+        alert($("input[id=hidCustomerDiallerKey]").val());
+        $('#myModal').modal({
+            show: 'true'
+        });
+        step1();
+            $('#chatAudio')[0].play();
+        var delay = 5000; //1 second
+        setTimeout(function () {
 
-    var person = prompt("Please enter your name", "Harry Potter");
-    $('#hidUserName').val(person);
+            initiateFeed();
+            $('#chatAudio')[0].pause();
+        }, delay);
+      
 
+    });
+ 
 
     $('#make-call').click(function () {
+
+
+
+        window.localStream.getTracks().forEach(t =>  t.stop());
+        window.localStream.getAudioTracks().forEach(t =>  t.stop());
         //Initiate a call!
-        var call = peer.call($('#callto-id').val(), window.localStream);
-        step3(call);
+        //var call = peer.call($('#callto-id').val(), window.localStream);
+        //step3(call);
     });
     $('#end-call').click(function () {
         window.existingCall.close();
         step2();
+
+
     });
-    $("#btnShowModal").click(function () {
+
+
+    $("#btnShowModal").click(function() {
+        
         $.connection.hub.start().done(function () {
             console.log("Connected, transport = " + $.connection.hub.transport.name);
             if (diallerKey != undefined && diallerKey.length > 0) {
@@ -124,6 +158,7 @@ $(function () {
             console.log('Connection Error ' + e);
         });
         step1();
+
     });
     // Retry if getUserMedia fails
     $('#step1-retry').click(function () {
@@ -131,21 +166,34 @@ $(function () {
         step();
     });
     $("#myModal").on("hidden.bs.modal", function () {
-        // put your default event here
-        if (window.existingCall) {
-            window.existingCall.close();
-            step2();
-        }
-        window.localStream.getTracks().forEach(t =>  t.stop());
-        window.localStream.getAudioTracks().forEach(t =>  t.stop());
-
+      
+          if (window.existingCall) {
+              window.existingCall.close();
+              step2();
+          }
+          window.localStream.getTracks().forEach(t =>  t.stop());
+          window.localStream.getAudioTracks().forEach(t =>  t.stop());
 
     });
 
     // Get things started
     //step1();
 });
-
+function initiateFeed() {
+    $.connection.hub.start().done(function () {
+        console.log("Connected, transport = " + $.connection.hub.transport.name);
+        if (diallerKey != undefined && diallerKey.length > 0) {
+            
+                var call = peer.call($("input[id=hidCustomerDiallerKey]").val(), window.localStream);
+                alert(diallerKey + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
+                step3(call);
+            
+        }
+    }).fail(function (e) {
+        console.log('Connection Error ' + e);
+    });
+   // step1();
+}
 function step1() {
 
     navigator.mediaDevices.getUserMedia({
@@ -164,19 +212,10 @@ function step1() {
         console.log(e);
     });
 
-    /*
-	//Get audio/video stream
-	navigator.getWebcam({audio: true, video: true}, function(stream){
-		// Display the video stream in the video object
-		$('#my-video').prop('src', URL.createObjectURL(stream));
 
-		window.localStream = stream;
-		step2();
-	}, function(){ $('#step1-error').show(); });*/
 }
 
 function step2() { //Adjust the UI
-    $('#step1', '#step3').hide();
     $('#step2').show();
 }
 

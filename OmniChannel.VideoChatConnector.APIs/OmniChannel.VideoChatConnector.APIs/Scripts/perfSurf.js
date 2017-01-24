@@ -1,9 +1,9 @@
 ﻿(function () {
-    var perfHub = $.connection.perfHub;
+    var videoChatHub = $.connection.videoChatHub;
     $.connection.hub.logging = true;
     $.connection.hub.start();
         var model;
-        perfHub.client.newMessage = function(message) {
+        videoChatHub.client.newMessage = function (message) {
             model.addMessage(message);
         };
 
@@ -15,7 +15,7 @@
         Model.prototype = {
             sendMessage: function() {
                 var self = this;
-                perfHub.server.send(self.message());
+                videoChatHub.server.send(self.message());
                 self.message("");
             },
             addMessage: function(message) {

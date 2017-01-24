@@ -4,6 +4,21 @@
         <name>OmniChannel.VideoChatConnector.APIs</name>
     </assembly>
     <members>
+        <member name="T:OmniChannel.VideoChatConnector.APIs.Constants">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:OmniChannel.VideoChatConnector.APIs.Constants.Agent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:OmniChannel.VideoChatConnector.APIs.Constants.Customer">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:OmniChannel.VideoChatConnector.APIs.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
             <summary>
             Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
@@ -480,6 +495,28 @@
             Initializes a new instance of the <see cref="T:OmniChannel.VideoChatConnector.APIs.Areas.HelpPage.XmlDocumentationProvider"/> class.
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.Send(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.ConnectCustomer(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="userName"></param>
+            <param name="webrtcDiallerKey"></param>
+            <param name="pageContext"></param>
+        </member>
+        <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.ConnectAgent(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="userName"></param>
+            <param name="webrtcDiallerKey"></param>
+            <param name="agentExpertise"></param>
         </member>
         <member name="T:OmniChannel.VideoChatConnector.APIs.Rentals.RentalsController">
             <summary>

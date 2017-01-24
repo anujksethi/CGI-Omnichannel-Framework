@@ -72,8 +72,7 @@ var VideoChatModal = React.createClass({
                                  return (
                                      {
                                          callerKey: '',
-                                         diallerKey: '',
-                                         //  ChatHub: $.connection.perfHub,
+                                         diallerKey: ''
                                      }
                                      );
                              },
@@ -120,12 +119,12 @@ var VideoChatModal = React.createClass({
                                      }
                                  });
 
-                                 var perfHub = $.connection.perfHub;
+                                 var videoChatHub = $.connection.videoChatHub;
 
                                  $.connection.hub.logging = true;
 
                                  var self = this;
-                                 perfHub.client.newMessage = function (message) {
+                                 videoChatHub.client.newMessage = function (message) {
                                      self.setState({ callerKey: message });
 
 
@@ -160,13 +159,13 @@ var VideoChatModal = React.createClass({
 
 
 
-                                 if (perfHub) {
+                                 if (videoChatHub) {
                                      console.log("SignalR hub initialized.");
                                  }
 
                                  function sendMessage(localPeerId) {
-                                     if (perfHub.server) {
-                                         perfHub.server.send(localPeerId);
+                                     if (videoChatHub.server) {
+                                         videoChatHub.server.send(localPeerId);
                                          console.log(localPeerId + " diallerkey shared");
                                      }
                                  }

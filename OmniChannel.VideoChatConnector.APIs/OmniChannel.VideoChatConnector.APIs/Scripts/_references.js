@@ -1,6 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../js/reactlib/react.js" />
 /// <reference path="../js/reactlib/react-dom.js" />
+/// <reference path="../js/videoagentchat.js" />
 /// <reference path="../js/videochat.js" />
 /// <reference path="bootstrap.js" />
 /// <reference path="jquery.signalr-2.2.1.min.js" />
