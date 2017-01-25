@@ -33,28 +33,28 @@ var callerKey, diallerKey;
 var self = this;
 var pageContext = $("meta[name='PageContext']").attr("content");
 var hubConnectionId
-videoChatHub.client.newMessage = function (message) {
-    // self.setState({ callerKey: message });
+//videoChatHub.client.newMessage = function (message) {
+//    // self.setState({ callerKey: message });
 
-    callerKey = message;
+//    callerKey = message;
 
-    //your code to be executed after 1 second
-    console.log(message + " push message received ");
-    if (diallerKey != callerKey) {
+//    //your code to be executed after 1 second
+//    console.log(message + " push message received ");
+//    if (diallerKey != callerKey) {
 
-        $('#chatAudio')[0].play();
-        var delay = 5000; //1 second
-        setTimeout(function () {
+//        $('#chatAudio')[0].play();
+//        var delay = 5000; //1 second
+//        setTimeout(function () {
 
-            var call = peer.call(message, window.localStream);
-            step3(call);
-            $('#chatAudio')[0].pause();
-        }, delay);
-    }
+//            var call = peer.call(message, window.localStream);
+//            step3(call);
+//            $('#chatAudio')[0].pause();
+//        }, delay);
+//    }
 
 
 
-}
+//}
 //$.connection.hub.start().done(function () {
 //    console.log("Connected, transport = " + $.connection.hub.transport.name);
 //    peer.on('open', function () {
@@ -77,7 +77,7 @@ function sendMessage(localPeerId) {
 
         videoChatHub.server.connectCustomer($('#hidUserName').val(), localPeerId, pageContext);
 
-        videoChatHub.server.send(localPeerId);
+       // videoChatHub.server.send(localPeerId);
         console.log(localPeerId + " diallerkey shared");
     }
 }

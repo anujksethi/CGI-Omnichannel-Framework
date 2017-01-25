@@ -130,18 +130,21 @@ $(function () {
     //step1();
 });
 function initiateFeed() {
-    $.connection.hub.start().done(function () {
-        console.log("Connected, transport = " + $.connection.hub.transport.name);
-        if ($("input[id=hidAgentDiallerKey]").val() != undefined && $("input[id=hidAgentDiallerKey]").val().length > 0) {
-            
-                var call = peer.call($("input[id=hidCustomerDiallerKey]").val(), window.localStream);
-                alert($("input[id=hidAgentDiallerKey]").val() + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
-                step3(call);
-            
-        }
-    }).fail(function (e) {
-        console.log('Connection Error ' + e);
-    });
+
+    if ($("input[id=hidAgentDiallerKey]").val() != undefined && $("input[id=hidAgentDiallerKey]").val().length > 0) {
+
+        var call = peer.call($("input[id=hidCustomerDiallerKey]").val(), window.localStream);
+        alert($("input[id=hidAgentDiallerKey]").val() + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
+        step3(call);
+
+    }
+
+    //$.connection.hub.start().done(function () {
+    //    console.log("Connected, transport = " + $.connection.hub.transport.name);
+      
+    //}).fail(function (e) {
+    //    console.log('Connection Error ' + e);
+    //});
    // step1();
 }
 function step1() {

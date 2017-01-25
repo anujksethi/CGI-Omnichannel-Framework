@@ -58,43 +58,8 @@ var Main = React.createClass({
             );
     },
     componentDidMount: function () {
-
-        var videoChatHub = $.connection.videoChatHub;
-        var person = prompt("Please enter your name", "Agent Name");
-        $('#hidUserName').val(person);
-
-        $.connection.hub.logging = true;
         var self = this;
-        $.connection.hub.start().done(function () {
-            console.log("Connected, transport = " + $.connection.hub.transport.name);
-            sendMessage();
-        }).fail(function (e) {
-            console.log('Connection Error ' + e);
-        });
-
-        if (videoChatHub) {
-            console.log("react SignalR hub initialized.");
-        }
-
-        function sendMessage() {
-            if (videoChatHub.server) {
-              
-                if ($("input[id=hidAgentDiallerKey]").val().length > 0)
-                    {
-                    videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(),  'Order');
-                console.log(" connectAgent from react called");
-                }
-            }
-        }
-        function findByName(source, customerName) {
-            for (var i = 0; i < source.length; i++) {
-                if (source[i].name === customerName) {
-                    return i;
-                }
-            }
-            console.log("Couldn't find object with id: " + customerName);
-            return -1;  
-        }
+        var videoChatHub = $.connection.videoChatHub;
         videoChatHub.client.addCustomerToAgents = function (customer, diallerKey, action) {
             var currentCustomers = self.state.customerArray;
             var index = findByName(currentCustomers, customer);
@@ -107,10 +72,9 @@ var Main = React.createClass({
             }
             else {
 
-                if (index < 0 )
-                {
+                if (index < 0) {
                     currentCustomers.push({ "name": customer, "diallerKey": diallerKey });
-                }              
+                }
             }
 
 
@@ -119,7 +83,48 @@ var Main = React.createClass({
                 this.forceUpdate();
             });
 
-        };
+        }
+        //var person = prompt("Please enter your name", "Agent Name");
+        $('#hidUserName').val("person");
+
+        $.connection.hub.logging = true;
+        var delay = 5000; //1 second
+        setTimeout(function () {
+
+            $.connection.hub.start().done(function () {
+                console.log("Connected, transport = " + $.connection.hub.transport.name);
+                sendMessage();
+            }).fail(function (e) {
+                console.log('Connection Error ' + e);
+            });
+
+            if (videoChatHub) {
+                console.log("react SignalR hub initialized.");
+            }
+           
+        }, delay);
+       
+
+        function sendMessage() {
+            //if (videoChatHub.server) {
+              
+                if ($("input[id=hidAgentDiallerKey]").val().length > 0)
+                    {
+                    videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(),  'Order');
+                console.log(" connectAgent from react called");
+                }
+            //}
+        }
+        function findByName(source, customerName) {
+            for (var i = 0; i < source.length; i++) {
+                if (source[i].name === customerName) {
+                    return i;
+                }
+            }
+            console.log("Couldn't find object with id: " + customerName);
+            return -1;  
+        }
+      
     },
     getInitialState: function () {
         return ({
