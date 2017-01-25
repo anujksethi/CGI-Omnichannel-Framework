@@ -43,7 +43,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             };
             Groups.Add(Context.ConnectionId, pageContext);
-            Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey);
+            Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey,Constants.ActionAdd);
             ConnectedCustomers.Add(registerCaller);
         }
 
@@ -94,7 +94,15 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
             var id = Context.ConnectionId;
             if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
             {
+                var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
+                Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
+                Groups.Remove(id, customer.PageContext);
+
                 ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
+
+               
+
+
             }
             if (ConnectedAgents.Count(x => x.AgentHubId == id) > 0)
             {

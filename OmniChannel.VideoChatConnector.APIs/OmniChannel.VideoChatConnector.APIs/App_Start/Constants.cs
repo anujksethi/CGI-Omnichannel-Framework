@@ -18,6 +18,14 @@ namespace OmniChannel.VideoChatConnector.APIs
         /// 
         /// </summary>
         public static string Customer= "customer";
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string ActionAdd = "Add";
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string ActionRemove = "Remove";
 
     }
 }

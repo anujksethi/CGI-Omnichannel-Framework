@@ -5,8 +5,9 @@ var CustomerProfile = React.createClass({
             <tr class="row" data-id={this.props.customer.diallerKey}>
 <td><b>   {this.props.customer.name} </b></td>
                 <td><b>   {this.props.customer.diallerKey} </b></td>
+                <td>
                 <button id="agentButton" data-id={this.props.customer.diallerKey} class="btn btn-primary btn-lg" onClick={this.handleClick}>Pick Customer call</button>
-
+                </td>
             </tr>
 );
     },
@@ -26,15 +27,19 @@ var CustomerList = React.createClass({
 
         var x = this.props.profileList;
 
+        var allProfiles = this.props.profileList.map(function (profile) {
+            return (
+                         <CustomerProfile customer={profile} />
+);
+        });
+
+
+
         return (
                      <table id="agentTable">
                 <tbody>
 
-                    {this.props.profileList.map(function (profile) {
-                       return
-                       <CustomerProfile customer={profile } />
-                   })
-                    }
+                    {allProfiles}
                 </tbody>
                      </table>
             );
@@ -55,6 +60,8 @@ var Main = React.createClass({
     componentDidMount: function () {
 
         var videoChatHub = $.connection.videoChatHub;
+        var person = prompt("Please enter your name", "Agent Name");
+        $('#hidUserName').val(person);
 
         $.connection.hub.logging = true;
         var self = this;
@@ -71,19 +78,47 @@ var Main = React.createClass({
 
         function sendMessage() {
             if (videoChatHub.server) {
-                videoChatHub.server.connectAgent('', '', '');
+              
+                if ($("input[id=hidAgentDiallerKey]").val().length > 0)
+                    {
+                    videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(),  'Order');
                 console.log(" connectAgent from react called");
+                }
             }
         }
-
-        videoChatHub.client.addCustomerToAgents = function (customer, diallerKey) {
+        function findByName(source, customerName) {
+            for (var i = 0; i < source.length; i++) {
+                if (source[i].name === customerName) {
+                    return i;
+                }
+            }
+            console.log("Couldn't find object with id: " + customerName);
+            return -1;  
+        }
+        videoChatHub.client.addCustomerToAgents = function (customer, diallerKey, action) {
             var currentCustomers = self.state.customerArray;
-            if (jQuery.inArray(customer, currentCustomers) == -1) {
-                currentCustomers.push({ "name": customer, "diallerKey": diallerKey });
+            var index = findByName(currentCustomers, customer);
+
+
+            if (action == "Remove") {
+                //var index = currentCustomers.indexOf(customer);
+                if (index > -1)
+                { currentCustomers.splice(index, 1); }
+            }
+            else {
+
+                if (index < 0 )
+                {
+                    currentCustomers.push({ "name": customer, "diallerKey": diallerKey });
+                }              
             }
 
 
-            self.setState({ customerArray: currentCustomers });
+            self.setState({ customerArray: currentCustomers }, function () {
+                console.log(this.state.customerArray);
+                this.forceUpdate();
+            });
+
         };
     },
     getInitialState: function () {

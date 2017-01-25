@@ -25,7 +25,7 @@ var peer = new Peer({
         ]
     }
 });
-
+/*
 var videoChatHub = $.connection.videoChatHub;
 
 $.connection.hub.logging = true;
@@ -33,37 +33,12 @@ var callerKey, diallerKey;
 var self = this;
 var hubConnectionId
 videoChatHub.client.newMessage = function (message) {
-    // self.setState({ callerKey: message });
-
-    callerKey = message;
-
+       callerKey = message;
     //your code to be executed after 1 second
     console.log(message + " push message received ");
-    //if (diallerKey != callerKey) {
-
-    //    $('#chatAudio')[0].play();
-    //    var delay = 5000; //1 second
-    //    setTimeout(function () {
-
-    //        var call = peer.call(message, window.localStream);
-    //        step3(call);
-    //        $('#chatAudio')[0].pause();
-    //    }, delay);
-    //}
-
-
-
+  
 }
-//$.connection.hub.start().done(function () {
-//    console.log("Connected, transport = " + $.connection.hub.transport.name);
-//    peer.on('open', function () {
-//        $('#my-id').text(peer.id);
-//        diallerKey = peer.id;
-//        sendMessage(peer.id);
-//    });
-//}).fail(function (e) {
-//    console.log('Connection Error ' + e);
-//});
+
 
 
 
@@ -76,27 +51,12 @@ function sendMessage(localPeerId) {
         videoChatHub.server.connectAgent(localPeerId);
         console.log(localPeerId + " jquery connectagent called");
     }
-}
-
-
-//function sendMessage(localPeerId) {
-//    if (videoChatHub.server) {
-
-//        videoChatHub.server.connectAgent('John', localPeerId, 'Order');
-
-//        videoChatHub.server.send(localPeerId);
-//        console.log(localPeerId + " diallerkey shared");
-//    }
-//}
-
-
-
-
+}*/
 
 // On open, set the peer id
 peer.on('open', function () {
-    $('#my-id').text(peer.id);
-    diallerKey = peer.id;
+    $('#hidAgentDiallerKey').val(peer.id);
+   // diallerKey = peer.id;
 });
 
 peer.on('call', function (call) {
@@ -107,10 +67,6 @@ peer.on('call', function (call) {
 
 // Click handlers setup
 $(function () {
-    //$("input[id=hidCustomerDiallerKey]").change(function () {
-    //    //fire your ajax call  
-    //    alert('value changed');
-    //});
     $("input[id=hidCustomerDiallerKey]").on('change', function() {
         alert($("input[id=hidCustomerDiallerKey]").val());
         $('#myModal').modal({
@@ -124,39 +80,33 @@ $(function () {
             initiateFeed();
             $('#chatAudio')[0].pause();
         }, delay);
-      
-
     });
  
 
     $('#make-call').click(function () {
 
-
-
-        window.localStream.getTracks().forEach(t =>  t.stop());
-        window.localStream.getAudioTracks().forEach(t =>  t.stop());
-        //Initiate a call!
-        //var call = peer.call($('#callto-id').val(), window.localStream);
-        //step3(call);
     });
     $('#end-call').click(function () {
-        window.existingCall.close();
+        if (window.existingCall) {
+            window.existingCall.close();
+            step2();
+        }
+        window.localStream.getTracks().forEach(t =>  t.stop());
+        window.localStream.getAudioTracks().forEach(t =>  t.stop());
         step2();
-
-
     });
 
 
     $("#btnShowModal").click(function() {
         
-        $.connection.hub.start().done(function () {
-            console.log("Connected, transport = " + $.connection.hub.transport.name);
-            if (diallerKey != undefined && diallerKey.length > 0) {
-                sendMessage(diallerKey);
-            }
-        }).fail(function (e) {
-            console.log('Connection Error ' + e);
-        });
+        //$.connection.hub.start().done(function () {
+        //    console.log("Connected, transport = " + $.connection.hub.transport.name);
+        //    if (diallerKey != undefined && diallerKey.length > 0) {
+        //        sendMessage(diallerKey);
+        //    }
+        //}).fail(function (e) {
+        //    console.log('Connection Error ' + e);
+        //});
         step1();
 
     });
@@ -182,10 +132,10 @@ $(function () {
 function initiateFeed() {
     $.connection.hub.start().done(function () {
         console.log("Connected, transport = " + $.connection.hub.transport.name);
-        if (diallerKey != undefined && diallerKey.length > 0) {
+        if ($("input[id=hidAgentDiallerKey]").val() != undefined && $("input[id=hidAgentDiallerKey]").val().length > 0) {
             
                 var call = peer.call($("input[id=hidCustomerDiallerKey]").val(), window.localStream);
-                alert(diallerKey + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
+                alert($("input[id=hidAgentDiallerKey]").val() + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
                 step3(call);
             
         }
