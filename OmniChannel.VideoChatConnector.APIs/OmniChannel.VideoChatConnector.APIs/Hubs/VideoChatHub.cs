@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using OmniChannel.VideoChatConnector.APIs.Models.VideoChat;
 
 namespace OmniChannel.VideoChatConnector.APIs.Hubs
@@ -24,6 +25,20 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
                 //   Context.User.Identity.Name+ " says " + message
                 );
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageContext"></param>
+        public void GetAllConnectedCustomers(string pageContext)
+        {
+            if (ConnectedCustomers != null && ConnectedCustomers.Count > 0)
+            {
+                var hubId = Context.ConnectionId;
+                var customersJson = JsonConvert.SerializeObject(ConnectedCustomers);
+                Clients.Client(hubId).getAllConnectedCustomers(customersJson);
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -32,7 +47,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
         /// <param name="pageContext"></param>
         public void ConnectCustomer(string userName, string webrtcDiallerKey, string pageContext)
         {
-                var id = Context.ConnectionId;
+            var id = Context.ConnectionId;
             var registerCaller = new CallerData()
             {
                 CustomerDiallerKey = webrtcDiallerKey,
@@ -43,7 +58,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             };
             Groups.Add(Context.ConnectionId, pageContext);
-            Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey,Constants.ActionAdd);
+            Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey, Constants.ActionAdd);
             ConnectedCustomers.Add(registerCaller);
         }
 
@@ -53,7 +68,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
         /// <param name="userName"></param>
         /// <param name="webrtcDiallerKey"></param>
         /// <param name="agentExpertise"></param>
-        public void ConnectAgent(string userName, string webrtcDiallerKey,string agentExpertise)
+        public void ConnectAgent(string userName, string webrtcDiallerKey, string agentExpertise)
         {
             var id = Context.ConnectionId;
             var registerCaller = new AgentData()
@@ -68,8 +83,28 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             Groups.Add(Context.ConnectionId, Constants.Agent);
 
-
+            GetAllConnectedCustomers(agentExpertise);
             ConnectedAgents.Add(registerCaller);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RemoveCustomer()
+        {
+            var id = Context.ConnectionId;
+            if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
+            {
+                var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
+                Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
+                Groups.Remove(id, customer.PageContext);
+
+                ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
+
+
+
+
+            }
         }
 
         //public async Task JoinGroup(string groupName)
@@ -100,7 +135,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
                 ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
 
-               
+
 
 
             }

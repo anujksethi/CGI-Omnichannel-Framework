@@ -84,8 +84,40 @@ var Main = React.createClass({
             });
 
         }
+
+
+        videoChatHub.client.getAllConnectedCustomers = function (customers) {
+            var currentCustomers = self.state.customerArray;
+            var customerArray = JSON.parse(customers);
+
+            for (var x = 0; x < customerArray.length ; x++)
+            {
+                currentCustomers.push({ "name": customerArray[x].CustomerName, "diallerKey": customerArray[x].CustomerDiallerKey });
+                
+            }
+
+        
+            
+            self.setState({ customerArray: currentCustomers }, function () {
+                console.log(this.state.customerArray);
+                this.forceUpdate();
+            });
+          //  alert(customers);
+            /*currentCustomers.push({ "name": customer, "diallerKey": diallerKey });
+            
+
+            self.setState({ customerArray: currentCustomers }, function () {
+                console.log(this.state.customerArray);
+                this.forceUpdate();
+            });*/
+
+        }
+
+
+
         //var person = prompt("Please enter your name", "Agent Name");
         $('#hidUserName').val("person");
+       
 
         $.connection.hub.logging = true;
         var delay = 5000; //1 second
@@ -111,9 +143,15 @@ var Main = React.createClass({
                 if ($("input[id=hidAgentDiallerKey]").val().length > 0)
                     {
                     videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(),  'Order');
-                console.log(" connectAgent from react called");
+                    console.log(" connectAgent from react called");
+                   // fetchCustomerList();
+
                 }
             //}
+        }
+        function fetchCustomerList()
+        {
+
         }
         function findByName(source, customerName) {
             for (var i = 0; i < source.length; i++) {

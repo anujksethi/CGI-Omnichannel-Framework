@@ -68,7 +68,7 @@ peer.on('call', function (call) {
 // Click handlers setup
 $(function () {
     $("input[id=hidCustomerDiallerKey]").on('change', function() {
-        alert($("input[id=hidCustomerDiallerKey]").val());
+        //alert($("input[id=hidCustomerDiallerKey]").val());
         $('#myModal').modal({
             show: 'true'
         });
@@ -134,7 +134,7 @@ function initiateFeed() {
     if ($("input[id=hidAgentDiallerKey]").val() != undefined && $("input[id=hidAgentDiallerKey]").val().length > 0) {
 
         var call = peer.call($("input[id=hidCustomerDiallerKey]").val(), window.localStream);
-        alert($("input[id=hidAgentDiallerKey]").val() + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
+      //  alert($("input[id=hidAgentDiallerKey]").val() + " customer key " + $("input[id=hidCustomerDiallerKey]").val());
         step3(call);
 
     }

@@ -33,40 +33,22 @@ var callerKey, diallerKey;
 var self = this;
 var pageContext = $("meta[name='PageContext']").attr("content");
 var hubConnectionId
-//videoChatHub.client.newMessage = function (message) {
-//    // self.setState({ callerKey: message });
-
-//    callerKey = message;
-
-//    //your code to be executed after 1 second
-//    console.log(message + " push message received ");
-//    if (diallerKey != callerKey) {
-
-//        $('#chatAudio')[0].play();
-//        var delay = 5000; //1 second
-//        setTimeout(function () {
-
-//            var call = peer.call(message, window.localStream);
-//            step3(call);
-//            $('#chatAudio')[0].pause();
-//        }, delay);
-//    }
 
 
+window.addEventListener("beforeunload", function (e) {
+    var confirmationMessage = "\o/";
+    if (videoChatHub.server) {
 
-//}
-//$.connection.hub.start().done(function () {
-//    console.log("Connected, transport = " + $.connection.hub.transport.name);
-//    peer.on('open', function () {
-//        $('#my-id').text(peer.id);
-//        diallerKey = peer.id;
-//        sendMessage(peer.id);
-//    });
-//}).fail(function (e) {
-//    console.log('Connection Error ' + e);
-//});
+        videoChatHub.server.removeCustomer();
 
+        // videoChatHub.server.send(localPeerId);
+        console.log( " Forced customer removal");
+    }
 
+  //  $.connection.hub.stop();
+    //(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    //return confirmationMessage;                            //Webkit, Safari, Chrome
+});
 
 if (videoChatHub) {
     console.log("SignalR hub initialized.");
@@ -139,7 +121,7 @@ $(function () {
         window.localStream.getTracks().forEach(t =>  t.stop());
         window.localStream.getAudioTracks().forEach(t =>  t.stop());
 
-
+        videoChatHub.server.removeCustomer();
     });
 
     // Get things started
