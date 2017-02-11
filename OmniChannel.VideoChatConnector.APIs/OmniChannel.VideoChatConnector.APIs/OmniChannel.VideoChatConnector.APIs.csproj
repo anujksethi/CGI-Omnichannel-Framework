@@ -239,6 +239,11 @@
     <Content Include="Global.asax" />
     <Content Include="images\ringtone.mp3" />
     <Content Include="images\vc2.png" />
+    <Content Include="js\libs\bootstrap.min.css" />
+    <Content Include="js\libs\bootstrap.min.js" />
+    <Content Include="js\libs\browser.min.js" />
+    <Content Include="js\libs\jquery.min.js" />
+    <Content Include="js\libs\peer.js" />
     <Content Include="js\reactLib\react-dom.js" />
     <Content Include="js\reactLib\react.js" />
     <Content Include="js\VideoAgentChat.js" />
@@ -325,16 +330,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>20810</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/OmniChannel.VideoChatConnector.APIs</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -39,6 +39,35 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
                 Clients.Client(hubId).getAllConnectedCustomers(customersJson);
             }
         }
+
+        private void BroadCastCustomers()
+        {
+            //if (ConnectedCustomers.Count > 0)
+            //{
+                Clients.Group(Constants.Customer).checkForAgents(true);
+            //}
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CheckForAgents(string enrollCustomer="")
+        {
+            var hubId = Context.ConnectionId;
+            if (ConnectedAgents!= null && ConnectedAgents.Count > 0)
+            {
+                Clients.Client(hubId).checkForAgents(true);
+            }
+            else
+            {
+                Clients.Client(hubId).checkForAgents(false);
+            }
+
+            if (!string.IsNullOrEmpty(enrollCustomer))
+            {
+                Groups.Add(Context.ConnectionId, Constants.Customer);
+            }
+           
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -57,9 +86,10 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
                 PageContext = pageContext
 
             };
-            Groups.Add(Context.ConnectionId, pageContext);
+            //Groups.Add(Context.ConnectionId, pageContext);
             Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey, Constants.ActionAdd);
             ConnectedCustomers.Add(registerCaller);
+           
         }
 
         /// <summary>
@@ -85,6 +115,10 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             GetAllConnectedCustomers(agentExpertise);
             ConnectedAgents.Add(registerCaller);
+            if (ConnectedAgents.Count == 1)
+            {
+                BroadCastCustomers();
+            }
         }
 
         /// <summary>
@@ -106,6 +140,30 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RemoveAgent()
+        {
+            var id = Context.ConnectionId;
+            if (ConnectedAgents.Count(x => x.AgentHubId == id) > 0)
+            {
+                //   var agent = ConnectedAgents.Find(x => x.AgentHubId == id);
+                //    Clients.Group(Constants.Agent).addCustomerToAgents(agent.CustomerName, agent.AgentDiallerKey, Constants.ActionRemove);
+                Groups.Remove(id, Constants.Agent);
+
+                ConnectedAgents.RemoveAll(item => item.AgentHubId == id);
+                if (ConnectedAgents.Count > 0)
+                {
+                    Clients.Group(Constants.Customer).checkForAgents(true);
+                }
+                else
+                {
+                    Clients.Group(Constants.Customer).checkForAgents(false);
+                }
+            }
+            
+        }
 
         //public async Task JoinGroup(string groupName)
         //{
@@ -126,23 +184,23 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
         }
         public override Task OnDisconnected(bool stopCalled)
         {
-            var id = Context.ConnectionId;
-            if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
-            {
-                var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
-                Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
-                Groups.Remove(id, customer.PageContext);
+            //var id = Context.ConnectionId;
+            //if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
+            //{
+            //    var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
+            //    Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
+            //    Groups.Remove(id, customer.PageContext);
 
-                ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
-
-
+            //    ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
 
 
-            }
-            if (ConnectedAgents.Count(x => x.AgentHubId == id) > 0)
-            {
-                ConnectedAgents.RemoveAll(item => item.AgentHubId == id);
-            }
+
+
+            //}
+            //if (ConnectedAgents.Count(x => x.AgentHubId == id) > 0)
+            //{
+            //    ConnectedAgents.RemoveAll(item => item.AgentHubId == id);
+            //}
             // Add your own code here.
             // For example: in a chat application, mark the user as offline, 
             // delete the association between the current connection id and user name.

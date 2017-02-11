@@ -135,7 +135,21 @@ var Main = React.createClass({
             }
            
         }, delay);
-       
+
+        window.addEventListener("beforeunload", function (e) {
+            var confirmationMessage = "\o/";
+            if (videoChatHub.server) {
+
+                videoChatHub.server.removeAgent();
+
+                // videoChatHub.server.send(localPeerId);
+                console.log(" Forced Agent removal");
+            }
+
+            //  $.connection.hub.stop();
+            //(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            //return confirmationMessage;                            //Webkit, Safari, Chrome
+        });
 
         function sendMessage() {
             //if (videoChatHub.server) {

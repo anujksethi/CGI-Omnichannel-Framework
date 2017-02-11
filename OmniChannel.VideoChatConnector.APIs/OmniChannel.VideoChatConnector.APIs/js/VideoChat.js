@@ -17,6 +17,7 @@ navigator.getWebcam = (navigator.getUserMedia ||
 var peer = new Peer({
     key: '2p9ffp7ol6p3nmi',
     debug: 3,
+ 
     config: {
         'iceServers': [
         { url: 'stun:stun.l.google.com:19302' },
@@ -72,7 +73,25 @@ function sendMessage(localPeerId) {
 peer.on('open', function () {
     $('#my-id').text(peer.id);
     diallerKey = peer.id;
+
+    $.connection.hub.start().done(function() {
+        videoChatHub.server.checkForAgents("newCustomer");
+
+    });
+
 });
+
+videoChatHub.client.checkForAgents = function (message) {
+    if (message == true) {
+        $('#divImg').css( 'display', 'block' );
+        $('#divTxt').css( 'display', 'none' );
+    }
+    else {
+        $('#divImg').css('display', 'none');
+        $('#divTxt').css('display', 'block');
+    }
+}
+
 
 peer.on('call', function (call) {
     // Answer automatically for demo
@@ -97,14 +116,14 @@ $(function () {
         step2();
     });
     $("#btnShowModal").click(function () {
-        $.connection.hub.start().done(function () {
+        //$.connection.hub.start().done(function () {
             console.log("Connected, transport = " + $.connection.hub.transport.name);
             if (diallerKey != undefined && diallerKey.length > 0) {
                 sendMessage(diallerKey);
             }
-        }).fail(function (e) {
-            console.log('Connection Error ' + e);
-        });
+        //}).fail(function (e) {
+        //    console.log('Connection Error ' + e);
+        //});
         step1();
     });
     // Retry if getUserMedia fails

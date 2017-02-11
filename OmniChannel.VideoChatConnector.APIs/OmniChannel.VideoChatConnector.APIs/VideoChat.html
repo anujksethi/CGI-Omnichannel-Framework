@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="PageContext" content="Order"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
+    <link rel="stylesheet" href="js/libs/bootstrap.min.css">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/libs/peer.js"></script>
     <!--<script src="Scripts/jquery-1.6.4.js"></script>-->
 
     <script src="Scripts/jquery.signalR-2.2.1.js"></script>
-    <script src="http://localhost/OmniChannel.VideoChatConnector.APIs/Signalr/hubs"></script>
+    <script src="Signalr/hubs"></script>
     <script src="js/VideoChat.js"></script>
     <style>
         video {
@@ -28,10 +28,15 @@
 </head>
 <body>
 <div>
-    <div>
+    <div style="display: none;" id="divImg">
         <img src="images/vc2.png" class="btn " id="btnShowModal" href="javascript:;" data-toggle="modal" data-target="#myModal"/>
     </div>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    <div style="display: none;" id="divTxt">
+        <h4>Agents are unavailable!!</h4>
+
+    </div>
+
+    <button type="button" disabled="disabled" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
         Launch demo modal
     </button>
     <input type="hidden" id="hidUserName"/>

@@ -136,7 +136,7 @@ var VideoChatModal = React.createClass({
                                          self.refs.chatAudio.play();
                                          var delay=5000; //1 second
                                          setTimeout(function() {
-
+                                             k
                                              var call = peer.call(message, window.localStream);
                                              step3(call);
                                              self.refs.chatAudio.pause();
@@ -157,6 +157,18 @@ var VideoChatModal = React.createClass({
                                      console.log('Connection Error ' + e);
                                  });
 
+                                 videoChatHub.client.checkForAgents = function (message) {
+                                     if(message==true)
+                                     {
+                                         $('#divImg img').css({ 'display': 'inline-block' });
+                                         $('#divTxt h4').css({ 'display': 'none' });
+                                     }
+                                     else
+                                     {
+                                         $('#divTxt h4').css({ 'display': 'inline-block' });
+                                         $('#divImg img').css({ 'display': 'none' });
+                                     }
+                                 }
 
 
                                  if (videoChatHub) {

@@ -17,6 +17,7 @@ navigator.getWebcam = (navigator.getUserMedia ||
 var peer = new Peer({
     key: '2p9ffp7ol6p3nmi',
     debug: 3,
+   
     config: {
         'iceServers': [
         { url: 'stun:stun.l.google.com:19302' },
@@ -25,33 +26,7 @@ var peer = new Peer({
         ]
     }
 });
-/*
-var videoChatHub = $.connection.videoChatHub;
 
-$.connection.hub.logging = true;
-var callerKey, diallerKey;
-var self = this;
-var hubConnectionId
-videoChatHub.client.newMessage = function (message) {
-       callerKey = message;
-    //your code to be executed after 1 second
-    console.log(message + " push message received ");
-  
-}
-
-
-
-
-if (videoChatHub) {
-    console.log("SignalR jquery hub initialized.");
-}
-
-function sendMessage(localPeerId) {
-    if (videoChatHub.server) {
-        videoChatHub.server.connectAgent(localPeerId);
-        console.log(localPeerId + " jquery connectagent called");
-    }
-}*/
 
 // On open, set the peer id
 peer.on('open', function () {

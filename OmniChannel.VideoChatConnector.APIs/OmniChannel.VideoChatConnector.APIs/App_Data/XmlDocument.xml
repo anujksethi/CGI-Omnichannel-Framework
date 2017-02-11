@@ -518,6 +518,11 @@
             </summary>
             <param name="pageContext"></param>
         </member>
+        <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.CheckForAgents(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.ConnectCustomer(System.String,System.String,System.String)">
             <summary>
             
@@ -535,6 +540,11 @@
             <param name="agentExpertise"></param>
         </member>
         <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.RemoveCustomer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:OmniChannel.VideoChatConnector.APIs.Hubs.VideoChatHub.RemoveAgent">
             <summary>
             
             </summary>
