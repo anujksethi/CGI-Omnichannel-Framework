@@ -101,7 +101,6 @@ C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatC
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\Microsoft.Owin.Security.dll
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\Microsoft.Owin.dll
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\OmniChannel.VideoChatConnector.APIs.pdb
-C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\MongoDB.Bson.xml
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\MongoDB.Driver.xml
 C:\CGI Git Repository\OmniChannel.VideoChatConnector.APIs\OmniChannel.VideoChatConnector.APIs.Tests\bin\Debug\MongoDB.Driver.Core.xml

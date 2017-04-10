@@ -58,8 +58,8 @@ if (videoChatHub) {
 function sendMessage(localPeerId) {
     if (videoChatHub.server) {
 
-        videoChatHub.server.connectCustomer($('#hidUserName').val(), localPeerId, pageContext);
-
+  //      videoChatHub.server.connectCustomer($('#hidUserName').val(), localPeerId, pageContext);
+        videoChatHub.server.broadcastCustomerToAgent(pageContext);
        // videoChatHub.server.send(localPeerId);
         console.log(localPeerId + " diallerkey shared");
     }
@@ -75,8 +75,9 @@ peer.on('open', function () {
     diallerKey = peer.id;
 
     $.connection.hub.start().done(function() {
-        videoChatHub.server.checkForAgents("newCustomer");
-
+     
+        videoChatHub.server.connectCustomer($('#hidUserName').val(), diallerKey, pageContext);
+      //  videoChatHub.server.checkForAgents("newCustomer");
     });
 
 });
@@ -140,7 +141,7 @@ $(function () {
         window.localStream.getTracks().forEach(t =>  t.stop());
         window.localStream.getAudioTracks().forEach(t =>  t.stop());
 
-        videoChatHub.server.removeCustomer();
+        videoChatHub.server.disableCustomer();
     });
 
     // Get things started

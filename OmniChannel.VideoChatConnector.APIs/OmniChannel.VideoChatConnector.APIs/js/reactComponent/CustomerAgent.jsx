@@ -156,7 +156,7 @@ var Main = React.createClass({
               
                 if ($("input[id=hidAgentDiallerKey]").val().length > 0)
                     {
-                    videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(),  'Order');
+                    videoChatHub.server.connectAgent($('#hidUserName').val(),$("input[id=hidAgentDiallerKey]").val(), $("meta[name='PageContext']").attr("content"));
                     console.log(" connectAgent from react called");
                    // fetchCustomerList();
 

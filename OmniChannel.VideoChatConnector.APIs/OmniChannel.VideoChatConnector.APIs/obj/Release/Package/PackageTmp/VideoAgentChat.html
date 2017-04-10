@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="PageContext" content="Order"/>
+    <script src="js/reactLib/react.js"></script>
+    <script src="js/reactLib/react-dom.js"></script>
+    <script src="js/libs/browser.min.js"></script>
+
+    <link rel="stylesheet" href="js/libs/bootstrap.min.css">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/libs/peer.js"></script>
+ 
+    <!--<script src="Scripts/jquery-1.6.4.js"></script>-->
+    <script src="Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="Signalr/hubs"></script>
+    <script src="js/VideoAgentChat.js"></script>
+    <script src="js/reactComponent/CustomerAgent.jsx" type="text/babel"></script>
+
+    <style>
+        video {
+  height: 425px;
+  margin: 0 0 20px 0;
+  vertical-align: top;
+  width: calc(100% - 12px);
+}
+      table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+    </style>
+    <link href="css/style.css" rel="stylesheet" />
+    <title>Video Agent Chat</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+<div>
+    <div>
+        <img src="images/vc2.png" class="btn " id="btnShowModal" href="javascript:;" data-toggle="modal" data-target="#myModal"/>
+    </div>
+    <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>-->
+    <div id="customerDiv"></div>
+    <input type="hidden" id="hidCustomerDiallerKey"/>
+
+    <input type="hidden" id="hidAgentDiallerKey"/>
+    <input type="hidden" id="hidUserName" />
+    <!-- Modal -->
+    <div class="modal fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <th width="40%">Agent Video</th>
+                            <th width="40%">Customer Video</th>
+                            <th width="20%">Action</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <video id="my-video" autoplay></video>
+                            </td>
+                            <td>
+                                <video id="their-video" autoplay class="their-video"></video>
+                            </td>
+                            <td>
+                                <div id="step2">
+                                    <!--<p>Your id: <span id="my-id">...</span></p>
+                                    <p>Share this id with others so they can call you.</p>-->
+                                    <audio id="chatAudio">
+                                        <source src="images/ringtone.mp3" type="audio/mpeg"></source>
+                                    </audio>
+                                    <!--<p>
+                                        <span id="subhead">Make a call</span><br />
+                                        <input type="text" placeholder="Call user id..." id="callto-id" />
+                                        <a href="#" id="make-call">Call</a>
+                                    </p>-->
+                                </div>
+                                <div id="step3">
+                                    <p>Currently in call with <span id="their-id">...</span></p>
+                                    <p><a href="#" id="end-call">End call</a></p>
+                                </div>
+                                <div id="step1">
+                                    <p>Please click 'allow' on the top of the screen so we can access your webcam and microphone for calls</p>
+                                    <div id="step1-error">
+                                        <p>Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.</p>
+                                        <a href="#" id="step1-retry" class="button">Try again</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

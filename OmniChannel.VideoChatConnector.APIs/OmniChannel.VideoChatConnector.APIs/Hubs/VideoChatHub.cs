@@ -14,7 +14,7 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
         static List<CallerData> ConnectedCustomers = new List<CallerData>();
         static List<AgentData> ConnectedAgents = new List<AgentData>();
-
+        private static string Order = "Order";
         /// <summary>
         /// 
         /// </summary>
@@ -35,25 +35,43 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
             if (ConnectedCustomers != null && ConnectedCustomers.Count > 0)
             {
                 var hubId = Context.ConnectionId;
-                var customersJson = JsonConvert.SerializeObject(ConnectedCustomers);
+                var customers = ConnectedCustomers.All(x => x.CustomerDiallerKeyValid == true);
+                var customersJson = JsonConvert.SerializeObject(customers);
                 Clients.Client(hubId).getAllConnectedCustomers(customersJson);
             }
         }
 
-        private void BroadCastCustomers()
+        private void BroadCastCustomers(string agentExpertise)
         {
             //if (ConnectedCustomers.Count > 0)
             //{
-                Clients.Group(Constants.Customer).checkForAgents(true);
+            if (ConnectedAgents.Count(x => x.AgentExpertise == agentExpertise) == 1)
+            {
+                foreach (var customer in ConnectedCustomers)
+                {
+                    if (Convert.ToString(customer.PageContext) == Convert.ToString(agentExpertise))
+                    {
+                        Clients.Client(customer.CustomerHubId).checkForAgents(true);
+                    }
+                }
+            }
+
+            //    Clients.Group(Constants.Customer).checkForAgents(true);
             //}
         }
         /// <summary>
         /// 
         /// </summary>
-        public void CheckForAgents(string enrollCustomer="")
+        public void CheckForAgents(string enrollCustomer = "")
         {
             var hubId = Context.ConnectionId;
-            if (ConnectedAgents!= null && ConnectedAgents.Count > 0)
+            string customerPageContext = string.Empty;
+            if (ConnectedCustomers.FirstOrDefault(x => x.CustomerHubId == hubId) != null)
+            {
+                customerPageContext = ConnectedCustomers.Find(x => x.CustomerHubId == hubId).PageContext;
+            }
+
+            if (ConnectedAgents != null && ConnectedAgents.FirstOrDefault(x => x.AgentExpertise == customerPageContext) != null)
             {
                 Clients.Client(hubId).checkForAgents(true);
             }
@@ -62,11 +80,37 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
                 Clients.Client(hubId).checkForAgents(false);
             }
 
-            if (!string.IsNullOrEmpty(enrollCustomer))
+            //if (ConnectedAgents!= null && ConnectedAgents.Count > 0)
+            //{
+
+            //}
+            //else
+            //{
+
+            //}
+
+            if (!string.IsNullOrEmpty(enrollCustomer) && enrollCustomer == "newCustomer")
             {
                 Groups.Add(Context.ConnectionId, Constants.Customer);
             }
-           
+
+        }
+
+        public void BroadcastCustomerToAgent(string pageContext)
+        {
+            var id = Context.ConnectionId;
+            var customer = ConnectedCustomers.FirstOrDefault(x => x.CustomerHubId == id);
+            if (customer != null)
+            {
+                customer.CustomerDiallerKeyValid = true;
+                foreach (var agent in ConnectedAgents)
+                {
+                    if (Convert.ToString(agent.AgentExpertise) == Convert.ToString(pageContext))
+                    {
+                        Clients.Client(agent.AgentHubId).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionAdd);
+                    }
+                }
+            }
         }
         /// <summary>
         /// 
@@ -80,16 +124,23 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
             var registerCaller = new CallerData()
             {
                 CustomerDiallerKey = webrtcDiallerKey,
-                CustomerDiallerKeyValid = true,
                 CustomerHubId = id,
                 CustomerName = userName,
                 PageContext = pageContext
+                
 
             };
             //Groups.Add(Context.ConnectionId, pageContext);
-            Clients.Group(Constants.Agent).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey, Constants.ActionAdd);
+            //foreach (var agent in ConnectedAgents)
+            //{
+            //    if (Convert.ToString(agent.AgentExpertise) == Convert.ToString(pageContext))
+            //    {
+            //        Clients.Client(agent.AgentHubId).addCustomerToAgents(registerCaller.CustomerName, registerCaller.CustomerDiallerKey, Constants.ActionAdd);
+            //    }
+            //}
+
             ConnectedCustomers.Add(registerCaller);
-           
+            CheckForAgents("newCustomer");
         }
 
         /// <summary>
@@ -115,10 +166,10 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
 
             GetAllConnectedCustomers(agentExpertise);
             ConnectedAgents.Add(registerCaller);
-            if (ConnectedAgents.Count == 1)
-            {
-                BroadCastCustomers();
-            }
+            //if (ConnectedAgents.Count == 1)
+            //{
+            BroadCastCustomers(agentExpertise);
+            //}
         }
 
         /// <summary>
@@ -130,39 +181,89 @@ namespace OmniChannel.VideoChatConnector.APIs.Hubs
             if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
             {
                 var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
+
                 Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
                 Groups.Remove(id, customer.PageContext);
 
                 ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
-
-
-
-
             }
         }
+
+        public void DisableCustomer()
+        {
+            var id = Context.ConnectionId;
+            if (ConnectedCustomers.Count(x => x.CustomerHubId == id) > 0)
+            {
+                var customer = ConnectedCustomers.Find(x => x.CustomerHubId == id);
+                customer.CustomerDiallerKeyValid = false;
+            //    BroadcastCustomerToAgent(customer.PageContext);
+                 Clients.Group(Constants.Agent).addCustomerToAgents(customer.CustomerName, customer.CustomerDiallerKey, Constants.ActionRemove);
+                //   Groups.Remove(id, customer.PageContext);
+
+                //    ConnectedCustomers.RemoveAll(item => item.CustomerHubId == id);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public void RemoveAgent()
         {
             var id = Context.ConnectionId;
+            var agentContext = string.Empty;
             if (ConnectedAgents.Count(x => x.AgentHubId == id) > 0)
             {
+                agentContext = ConnectedAgents.FirstOrDefault(x => x.AgentHubId == id).AgentExpertise;
+
+
                 //   var agent = ConnectedAgents.Find(x => x.AgentHubId == id);
                 //    Clients.Group(Constants.Agent).addCustomerToAgents(agent.CustomerName, agent.AgentDiallerKey, Constants.ActionRemove);
                 Groups.Remove(id, Constants.Agent);
 
                 ConnectedAgents.RemoveAll(item => item.AgentHubId == id);
-                if (ConnectedAgents.Count > 0)
+
+
+                if (ConnectedAgents.Count(x=>x.AgentExpertise==agentContext) > 0)
                 {
-                    Clients.Group(Constants.Customer).checkForAgents(true);
+                    //Clients.Group(Constants.Customer).checkForAgents(true);
+                    foreach (var customer in ConnectedCustomers)
+                    {
+                        if (Convert.ToString(customer.PageContext) == Convert.ToString(agentContext))
+                        {
+                            Clients.Client(customer.CustomerHubId).checkForAgents(true);
+                        }
+                    }
                 }
                 else
                 {
-                    Clients.Group(Constants.Customer).checkForAgents(false);
+                    foreach (var customer in ConnectedCustomers)
+                    {
+                        if (Convert.ToString(customer.PageContext) == Convert.ToString(agentContext))
+                        {
+                            Clients.Client(customer.CustomerHubId).checkForAgents(false);
+                        }
+                    }
+                    //Clients.Group(Constants.Customer).checkForAgents(false);
                 }
             }
-            
+
+            //remove the agent availability if the agents in customer context not available
+            //if (ConnectedAgents.Count(x => x.AgentExpertise == agentContext) == 0)
+            //{
+            //    foreach (var customer in ConnectedCustomers)
+            //    {
+            //        if (Convert.ToString(customer.PageContext) == Convert.ToString(agentContext))
+            //        {
+            //            Clients.Client(customer.CustomerHubId).checkForAgents(false);
+            //        }
+            //    }
+            //}
+
+
+
+
+
+
         }
 
         //public async Task JoinGroup(string groupName)

@@ -166,9 +166,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\Constants.cs" />
@@ -228,6 +226,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\XmlDocument.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -271,6 +270,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="js\reactComponent\CustomerChat.jsx" />
     <Content Include="js\reactComponent\CustomerAgent.jsx" />
+    <None Include="Properties\PublishProfiles\Anuj.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -286,7 +286,9 @@
     <Content Include="Scripts\perfSurf.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="VideoProductAgentChat.html" />
     <Content Include="VideoAgentChat.html" />
+    <Content Include="VideoProductChat.html" />
     <Content Include="VideoChat.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
